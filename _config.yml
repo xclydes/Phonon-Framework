@@ -1,0 +1,16 @@
+# Site settings
+title: Phonon Framework
+description: A light weight, scalable and customizable HTML5 Hybrid Mobile App Framework working with Cordova. UI components inspired by Google Material Design.
+baseurl: "/quark-dev/Phonon-Framework" # the subpath of your site, e.g. /blog
+url: "http://yourdomain.com" # the base hostname & protocol for your site
+github_username: quark-dev
+
+# Build settings
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+exclude:
+  - node_modules
