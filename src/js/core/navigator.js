@@ -81,8 +81,16 @@
         callback(self);
       };
     };
-
+	
     /**
+     * Called when the user presses the back button
+     * @param {Function} callback
+     */
+    Activity.prototype.onBack = function (callback) {
+        this.onBackCallback = callback;
+    };
+	  
+	  /**
      * Called when the page is completely hidden
      * @param {Function} callback
      */
@@ -1075,12 +1083,26 @@
    * [2] window.on(...) seems buggy
    */
   if(opts.useHash) window.addEventListener('hashchange', onRoute);
-
-  document.on('backbutton', function() {
-    if(isComponentVisible()) return;
-    var last = getLastPage();
-    callClose(currentPage, last.page, opts.hashPrefix + last.page + '/' + last.params);
-  });
+	
+	document.on('backbutton', function() {
+		//If any components are visible
+		if(isComponentVisible()) return;
+		//Assume normal operation
+		var doClose = true;
+		//Get the current page object
+		var currPage = getPageObject( currentPage );
+		// Call the onBack callback
+		if(currPage.activity instanceof Activity && typeof currPage.activity.onBackCallback === 'function') {
+			doClose = currPage.activity.onBackCallback();
+		}
+		//If close is allowed
+		if( doClose ) {
+			//Get the previous page
+			var last = getLastPage();
+			//Close the current page
+			callClose(currentPage, last.page, opts.hashPrefix + last.page + '/' + last.params);
+		}
+	});
 
   phonon.navigator = function(options) {
     if(typeof options === 'object') {
